@@ -1,0 +1,25 @@
+# ==============================================================================
+# VidyaGraph — Windows-side dependencies
+# Install: pip install -r requirements_windows.txt
+# Requires: Python 3.10+, CUDA-capable GPU (RTX 4050 6GB VRAM)
+# ==============================================================================
+
+# --- Web framework ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+
+# --- Database client (connects to ShaktiDB in WSL2 via localhost) ---
+psycopg2-binary>=2.9.9
+
+# --- Wire protocol serialisation ---
+msgpack>=1.0.7
+
+# --- Embedding model (GPU-accelerated) ---
+sentence-transformers>=2.7.0
+torch>=2.2.0
+
+# --- Numerical computing ---
+numpy>=1.26.0
+
+# --- File upload handling ---
+python-multipart>=0.0.9
