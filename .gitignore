@@ -1,0 +1,59 @@
+# ==============================================================================
+# VidyaGraph .gitignore
+# Covers: Python, WSL artefacts, Node, OS-level files
+# ==============================================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+*.so
+
+# --- Virtual environments ---
+venv/
+.venv/
+env/
+.env
+.env.local
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# --- OS artifacts ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+._*
+
+# --- Logs ---
+*.log
+
+# --- PyTorch / ML model cache ---
+# (Models are downloaded at runtime; don't commit multi-GB caches)
+.cache/
+models/
+
+# --- Byte-compiled / temporary ---
+*.pyc
+*.pyo
+*.pyd
+
+# --- Testing ---
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# --- WSL artifacts ---
+*.sock

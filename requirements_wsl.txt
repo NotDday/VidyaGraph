@@ -1,0 +1,14 @@
+# ==============================================================================
+# VidyaGraph — WSL-side dependencies (Ubuntu on WSL 2)
+# Install: pip install -r requirements_wsl.txt
+# Requires: Python 3.10+, ShaktiDB running on localhost:5432
+# ==============================================================================
+
+# --- Database client (connects to ShaktiDB locally) ---
+psycopg2-binary>=2.9.9
+
+# --- Wire protocol serialisation ---
+msgpack>=1.0.7
+
+# --- Numerical computing (vector operations for query handling) ---
+numpy>=1.26.0
