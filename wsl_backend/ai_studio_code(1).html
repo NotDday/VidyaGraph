@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untitled1 - Jupyter Notebook</title>
+  <style>
+    :root {
+      --jp-canvas: #eeeeee;
+      --jp-paper: #ffffff;
+      --jp-cell-bg: #f7f7f7;
+      --jp-cell-border: #cfcfcf;
+      --jp-active-blue: #42a5f5;
+      --jp-edit-green: #66bb6a;
+      --jp-prompt-blue: #303f9f;
+      --jp-prompt-red: #d84315;
+      --jp-orange: #f37726;
+      --jp-text: #000000;
+      --jp-muted: #555555;
+      --jp-border: #e0e0e0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--jp-canvas);
+      color: var(--jp-text);
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* --- JUPYTER TOP HEADER BAR --- */
+    .jp-top-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--jp-border);
+      padding: 6px 16px 2px 16px;
+      flex-shrink: 0;
+    }
+    .jp-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .jp-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .jp-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 700;
+      font-size: 17px;
+      color: #333;
+      letter-spacing: -0.5px;
+    }
+    .jp-logo-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 3px solid var(--jp-orange);
+      display: inline-block;
+      position: relative;
+    }
+    .jp-notebook-name {
+      font-size: 16px;
+      color: #333;
+      padding: 2px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .jp-notebook-name:hover { background: #f0f0f0; }
+    .jp-checkpoint { font-size: 12px; color: #777; }
+    .jp-kernel-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: #555;
+    }
+    .jp-logout-btn {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* --- JUPYTER MENU BAR --- */
+    .jp-menubar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 3px;
+      font-size: 13px;
+    }
+    .jp-menus {
+      display: flex;
+      gap: 14px;
+      color: #333;
+    }
+    .jp-menus span { cursor: pointer; padding: 2px 4px; }
+    .jp-menus span:hover { background: #eeeeee; }
+    .jp-kernel-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #333;
+    }
+    .kernel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid #555;
+      display: inline-block;
+      background: transparent;
+    }
+
+    /* --- JUPYTER ICON TOOLBAR --- */
+    .jp-toolbar {
+      background: #f5f5f5;
+      border-bottom: 1px solid #d4d4d4;
+      padding: 4px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .jp-btn-group {
+      display: inline-flex;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .jp-tool-btn {
+      background: #ffffff;
+      border: none;
+      border-right: 1px solid #e0e0e0;
+      padding: 4px 9px;
+      font-size: 12px;
+      color: #333;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .jp-tool-btn:last-child { border-right: none; }
+    .jp-tool-btn:hover { background: #e6e6e6; }
+    .jp-tool-select {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #333;
+    }
+    .jp-search-input {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      width: 270px;
+      color: #222;
+    }
+    .jp-search-input:focus { outline: none; border-color: var(--jp-active-blue); }
+
+    /* Navigation Tabs */
+    .jp-nav-tabs {
+      background: #e8e8e8;
+      border-bottom: 1px solid #cccccc;
+      padding: 4px 16px;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      background: #f8f8f8;
+      color: #333;
+      border: 1px solid #c8c8c8;
+      padding: 4px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: #ffffff;
+      border-bottom: 2px solid var(--jp-orange);
+      font-weight: 700;
+      color: #000;
+    }
+    .tab-btn:hover:not(.active) { background: #ffffff; }
+
+    /* --- MAIN WORKSPACE --- */
+    .jp-workspace {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Left Collapsible Drawer */
+    .jp-sidebar {
+      width: 255px;
+      background: #f8f8f8;
+      border-right: 1px solid #d0d0d0;
+      padding: 10px;
+      overflow-y: auto;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .jp-sidebar.collapsed { display: none; }
+    .jp-sidebar h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #666;
+      margin: 12px 0 6px 0;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 3px;
+    }
+    .jp-sidebar h3:first-child { margin-top: 0; }
+    .jp-sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .jp-sidebar li { margin-bottom: 3px; }
+    .jp-sidebar a {
+      color: #1a0dab;
+      text-decoration: none;
+      display: block;
+      padding: 3px 6px;
+      border-radius: 2px;
+    }
+    .jp-sidebar a:hover { background: #e4e4e4; text-decoration: underline; }
+    .side-box {
+      background: #ffffff;
+      border: 1px solid #d8d8d8;
+      padding: 8px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .check-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; color: #222; cursor: pointer; }
+    .formula-item { margin-bottom: 5px; padding-bottom: 4px; border-bottom: 1px dotted #ccc; }
+    .formula-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .formula-name { font-weight: 700; color: #303f9f; }
+    .formula-math { font-family: monospace; font-size: 11px; color: #333; display: block; }
+
+    /* Center Notebook Paper Container */
+    .jp-notebook-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 20px 60px 20px;
+      background: var(--jp-canvas);
+    }
+    .jp-notebook-sheet {
+      max-width: 1120px;
+      margin: 0 auto;
+      background: var(--jp-paper);
+      border: 1px solid #d4d4d4;
+      box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
+      padding: 18px 22px;
+      min-height: 92%;
+    }
+
+    /* --- JUPYTER CELLS --- */
+    .jp-cell {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      padding: 5px 5px 5px 0;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
+      border-left: 5px solid transparent;
+      border-radius: 2px;
+      position: relative;
+    }
+    .jp-cell:hover, .jp-cell:focus-within {
+      border-color: #ababab;
+      border-left: 5px solid var(--jp-edit-green);
+    }
+    .jp-cell.cmd-mode {
+      border-color: #ababab;
+      border-left: 5px solid var(--jp-active-blue);
+    }
+    .jp-prompt {
+      min-width: 82px;
+      width: 82px;
+      text-align: right;
+      padding: 7px 10px 0 0;
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 13px;
+      color: var(--jp-prompt-blue);
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .jp-prompt.out { color: var(--jp-prompt-red); }
+    .jp-cell-body {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+    }
+
+    .jp-input-area {
+      background: var(--jp-cell-bg);
+      border: 1px solid var(--jp-cell-border);
+      border-radius: 2px;
+      position: relative;
+    }
+    pre {
+      margin: 0;
+      padding: 10px 12px;
+      overflow-x: auto;
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #212121;
+      background: transparent;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #ffffff;
+      color: #333;
+      border: 1px solid #bbb;
+      padding: 3px 9px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 11px;
+      font-family: sans-serif;
+      z-index: 2;
+    }
+    .copy-btn:hover { background: #e8e8e8; border-color: #888; }
+
+    .jp-markdown {
+      padding: 4px 8px;
+      line-height: 1.5;
+      color: #222;
+    }
+    .jp-markdown h3, .jp-markdown h4 {
+      margin: 8px 0 6px 0;
+      color: #111;
+      border-bottom: 1px solid #eaecef;
+      padding-bottom: 4px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 10px;
+      background: #f7f7f7;
+      padding: 12px;
+      border-radius: 2px;
+      border: 1px solid #cfcfcf;
+      margin-bottom: 8px;
+    }
+    .control-group { display: flex; flex-direction: column; gap: 3px; }
+    .control-group label { font-size: 11px; color: #444; font-weight: 700; font-family: monospace; }
+    input[type="text"], select {
+      padding: 5px 8px;
+      border-radius: 2px;
+      border: 1px solid #bababa;
+      background: #ffffff;
+      color: #111;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    input[type="text"]:focus, select:focus { outline: none; border-color: var(--jp-active-blue); }
+
+    .toggles-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: #fcfcfc;
+      padding: 8px 12px;
+      border: 1px solid #cfcfcf;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .toggle-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      padding: 3px 8px;
+      border-radius: 2px;
+      border: 1px solid #cccccc;
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-pill:hover { border-color: var(--jp-active-blue); background: #f0f7ff; }
+
+    .readme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-bottom: 14px; }
+    .readme-card { background: #fafafa; border: 1px solid #dcdcdc; border-radius: 2px; padding: 12px; }
+    .readme-card h3 { margin-top: 0; color: #222; font-size: 14px; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px; }
+    .readme-card p, .readme-card li { color: #333; font-size: 12.5px; line-height: 1.5; }
+    .readme-card ul, .readme-card ol { padding-left: 18px; margin: 0; }
+    .readme-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 12.5px; border: 1px solid #cbcbcb; }
+    .readme-table th, .readme-table td { padding: 7px 10px; text-align: left; border: 1px solid #cbcbcb; }
+    .readme-table th { background: #efefef; color: #111; font-weight: 700; }
+    .readme-table tr:nth-child(even) { background: #f9f9f9; }
+    code.inline { background: #f2f2f2; color: #c7254e; padding: 1px 4px; border-radius: 2px; font-family: monospace; font-size: 12px; border: 1px solid #e0e0e0; }
+
+    .error-card {
+      background: #fdd;
+      border: 1px solid #eaa;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      border-radius: 2px;
+    }
+    .error-title { color: #b71c1c; font-family: monospace; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+    .error-cause { color: #333; font-size: 12px; margin-bottom: 6px; }
+    .error-fix {
+      background: #f7f7f7;
+      padding: 8px 10px;
+      border: 1px solid #cfcfcf;
+      font-family: monospace;
+      font-size: 12px;
+      color: #0b5e20;
+      white-space: pre-wrap;
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- 1. AUTHENTIC JUPYTER HEADER -->
+  <div class="jp-top-header">
+    <div class="jp-title-row">
+      <div class="jp-logo-group">
+        <span class="jp-logo"><span class="jp-logo-circle"></span> jupyter</span>
+        <span class="jp-notebook-name" title="Click to toggle left file drawer" onclick="toggleSidebar()">Untitled1</span>
+        <span class="jp-checkpoint">Last Checkpoint: a few seconds ago (autosaved)</span>
+      </div>
+      <div class="jp-kernel-right">
+        <button class="jp-logout-btn" onclick="toggleSidebar()">☰ Toggle Sidebar</button>
+        <button class="jp-logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <div class="jp-menubar">
+      <div class="jp-menus">
+        <span onclick="downloadIPYNB()">File</span>
+        <span onclick="copyCode('genOutput', null)">Edit</span>
+        <span onclick="toggleSidebar()">View</span>
+        <span>Insert</span>
+        <span>Cell</span>
+        <span>Kernel</span>
+        <span>Widgets</span>
+        <span onclick="switchTab('readme', document.querySelectorAll('.tab-btn')[0])">Help</span>
+      </div>
+      <div class="jp-kernel-status">
+        <span>Trusted</span> | <span>Python 3 (ipykernel)</span> <span class="kernel-dot" title="Kernel Idle"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. AUTHENTIC JUPYTER ICON TOOLBAR -->
+  <div class="jp-toolbar">
+    <div class="jp-btn-group">
+      <button class="jp-tool-btn" title="Save and Download .ipynb (Alt+J)" onclick="downloadIPYNB()">💾</button>
+    </div>
+    <div class="jp-btn-group">
+      <button class="jp-tool-btn" title="Download .py script" onclick="downloadPY()">＋</button>
+      <button class="jp-tool-btn" title="Reset inputs" onclick="resetBuilder()">✂</button>
+      <button class="jp-tool-btn" title="Copy generated code (Alt+C)" onclick="copyCode('genOutput', this)">📋</button>
+    </div>
+    <div class="jp-btn-group">
+      <button class="jp-tool-btn" title="Copy Active Pipeline Code" onclick="copyCode('genOutput', this)">▶ Run</button>
+      <button class="jp-tool-btn" title="Clear Search" onclick="clearGlobalSearch()">■</button>
+      <button class="jp-tool-btn" title="Regenerate Code" onclick="generateCode()">↻</button>
+    </div>
+    <select class="jp-tool-select" onchange="if(this.value) switchTab(this.value, null)">
+      <option value="generator">Code</option>
+      <option value="readme">Markdown</option>
+      <option value="err_doc">Raw NBConvert</option>
+    </select>
+
+    <input type="text" id="globalSearch" class="jp-search-input" placeholder="Find snippet / error (Ctrl+K)..." oninput="runGlobalSearch(this.value)">
+  </div>
+
+  <!-- 3. CELL / SECTION NAVIGATION BAR -->
+  <div class="jp-nav-tabs" id="tabBar">
+    <button class="tab-btn" onclick="switchTab('readme', this)">[1] 📖 README & Algo</button>
+    <button class="tab-btn active" onclick="switchTab('generator', this)">[2] 🛠️ Pipeline Builder</button>
+    <button class="tab-btn" onclick="switchTab('ensemble', this)">[3] 🚀 Auto-Ensembles</button>
+    <button class="tab-btn" onclick="switchTab('compare', this)">[4] 🏆 All Models Loop</button>
+    <button class="tab-btn" onclick="switchTab('cv_tab', this)">[5] 📋 Cross-Validation</button>
+    <button class="tab-btn" onclick="switchTab('plots_tab', this)">[6] 📊 Plots & Visuals</button>
+    <button class="tab-btn" onclick="switchTab('fe_tab', this)">[7] 🎯 Feature Eng / Imbalance</button>
+    <button class="tab-btn" onclick="switchTab('tf_seq', this)">[8] 🧠 TensorFlow Sequential</button>
+    <button class="tab-btn" onclick="switchTab('numpy_nn', this)">[9] ⚡ NumPy Backprop</button>
+    <button class="tab-btn" onclick="switchTab('err_doc', this)">[10] 🩺 Traceback Doctor</button>
+    <button class="tab-btn" onclick="switchTab('params_tab', this)">[11] 📚 Params Reference</button>
+  </div>
+
+  <!-- 4. WORKSPACE: LEFT DRAWER + WHITE NOTEBOOK PAPER -->
+  <div class="jp-workspace">
+
+    <!-- Collapsible Left Drawer -->
+    <div class="jp-sidebar" id="leftSidebar">
+      <h3>✅ Lab Workflow</h3>
+      <div class="side-box">
+        <label class="check-item"><input type="checkbox" id="chk1" onchange="saveState()"> 1. Checked <code>df.info()</code></label>
+        <label class="check-item"><input type="checkbox" id="chk2" onchange="saveState()"> 2. Set Target col name</label>
+        <label class="check-item"><input type="checkbox" id="chk3" onchange="saveState()"> 3. Checked <code>y.nunique()</code></label>
+        <label class="check-item"><input type="checkbox" id="chk4" onchange="saveState()"> 4. Dropped ID/Name cols</label>
+        <label class="check-item"><input type="checkbox" id="chk5" onchange="saveState()"> 5. Recorded metrics</label>
+      </div>
+
+      <h3>🏷️ Metric Formulas</h3>
+      <div class="side-box">
+        <div class="formula-item">
+          <span class="formula-name">F2 Score (beta=2)</span>
+          <span class="formula-math">5*(P*R) / (4*P + R)</span>
+        </div>
+        <div class="formula-item">
+          <span class="formula-name">Recall & Precision</span>
+          <span class="formula-math">R=TP/(TP+FN) | P=TP/(TP+FP)</span>
+        </div>
+        <div class="formula-item">
+          <span class="formula-name">R² & RMSE</span>
+          <span class="formula-math">1 - Σ(y-ŷ)²/Σ(y-ȳ)²</span>
+        </div>
+      </div>
+
+      <h3>📘 Documentation</h3>
+      <ul>
+        <li><a href="https://scikit-learn.org/stable/api/index.html" target="_blank">scikit-learn API Index</a></li>
+        <li><a href="https://www.tensorflow.org/guide/keras/sequential_model" target="_blank">TensorFlow Sequential Guide</a></li>
+        <li><a href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank">sklearn.ensemble Docs</a></li>
+        <li><a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank">sklearn.metrics Docs</a></li>
+        <li><a href="https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf" target="_blank">Pandas Cheat Sheet PDF</a></li>
+      </ul>
+
+      <h3>💻 Code Repositories</h3>
+      <ul>
+        <li><a href="https://github.com/Avik-Jain/100-Days-Of-ML-Code/tree/master/Code" target="_blank">100-Days-Of-ML-Code</a></li>
+        <li><a href="https://www.kaggle.com/code" target="_blank">Kaggle Notebooks</a></li>
+        <li><a href="https://chrisalbon.com/" target="_blank">Chris Albon Snippets</a></li>
+        <li><a href="https://www.geeksforgeeks.org/machine-learning/" target="_blank">GeeksforGeeks ML</a></li>
+      </ul>
+    </div>
+
+    <!-- Notebook Paper Scroll Area -->
+    <div class="jp-notebook-scroll">
+      <div class="jp-notebook-sheet">
+
+        <!-- GLOBAL SEARCH OVERLAY CELL -->
+        <div id="searchResultsBox" class="hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt out">Out[Search]:</div>
+            <div class="jp-cell-body">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <b>Search Results</b>
+                <button class="jp-logout-btn" onclick="clearGlobalSearch()">✕ Close</button>
+              </div>
+              <div id="searchMatchesContainer"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 1: README -->
+        <div id="readme" class="tab-content hidden">
+          <div class="jp-cell cmd-mode">
+            <div class="jp-prompt"></div>
+            <div class="jp-cell-body jp-markdown">
+              <h3># AI/ML Lab Notebook Reference & Playbook</h3>
+              <div class="readme-grid">
+                <div class="readme-card">
+                  <h3>⏱️ 60-Second Execution Steps</h3>
+                  <ol>
+                    <li>Inspect CSV: Run <code class="inline">df = pd.read_csv('file.csv')</code>, <code class="inline">df.info()</code>, and <code class="inline">df['target'].nunique()</code>.</li>
+                    <li>Open <b>[2] 🛠️ Pipeline Builder</b>, enter your CSV name, target column, and any ID columns to drop.</li>
+                    <li>Select your model (including <b>ANN - TensorFlow Sequential</b> or <b>Stacking Ensemble</b>).</li>
+                    <li>Click <b>▶ Run</b> (or <b>Copy Cell</b>) to copy the code, or click <b>💾</b> on the toolbar to download a real <code class="inline">.ipynb</code> file!</li>
+                  </ol>
+                </div>
+                <div class="readme-card">
+                  <h3>⌨️ Keyboard Shortcuts</h3>
+                  <ul>
+                    <li><code class="inline">Ctrl + K</code> : Focus Top Search Bar</li>
+                    <li><code class="inline">Alt + 1..9</code> : Switch Notebook Sections</li>
+                    <li><code class="inline">Alt + C</code> : Copy Pipeline Builder Code</li>
+                    <li><code class="inline">Alt + J</code> : Download <code class="inline">.ipynb</code> Notebook</li>
+                    <li>Click <b>Untitled1</b> or <b>☰ Toggle Sidebar</b> at the top to hide the left panel!</li>
+                  </ul>
+                </div>
+              </div>
+
+              <h4>## Exam Question Decision Matrix</h4>
+              <table class="readme-table">
+                <thead>
+                  <tr>
+                    <th>Exam Prompt</th>
+                    <th>Recommended Cell / Setting</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>General Classification / Regression (Model not forced)</td>
+                    <td><b>[2] Pipeline Builder</b> ➔ <b>Stacking Classifier / Regressor</b></td>
+                    <td>Combines RF, SVM, Decision Tree, and MLP for highest metric scores.</td>
+                  </tr>
+                  <tr>
+                    <td>Specific Model (SVM / Decision Tree / Linear / Logistic / RF)</td>
+                    <td><b>[2] Pipeline Builder</b> ➔ Select model + <b>GridSearchCV</b></td>
+                    <td>Auto-tunes hyperparameters via 5-fold cross-validation.</td>
+                  </tr>
+                  <tr>
+                    <td>ANN / Neural Network using <b>TensorFlow Sequential</b></td>
+                    <td><b>[2] Pipeline Builder</b> ➔ <b>ANN (tf.keras.Sequential)</b> OR <b>[8] 🧠 TensorFlow Sequential</b></td>
+                    <td>Uses <code class="inline">tf.keras.models.Sequential</code> with Dense layers, BatchNormalization, Dropout, and EarlyStopping.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: PIPELINE BUILDER (DEFAULT ACTIVE) -->
+        <div id="generator" class="tab-content">
+          <!-- Cell 1: Configuration Widget -->
+          <div class="jp-cell cmd-mode">
+            <div class="jp-prompt">In [1]:</div>
+            <div class="jp-cell-body">
+              <div class="controls">
+                <div class="control-group">
+                  <label>csv_filename =</label>
+                  <input type="text" id="csvName" value="dataset.csv" oninput="onBuilderChange()">
+                </div>
+                <div class="control-group">
+                  <label>target_col =</label>
+                  <input type="text" id="targetCol" value="target" oninput="onBuilderChange()">
+                </div>
+                <div class="control-group">
+                  <label>drop_cols =</label>
+                  <input type="text" id="dropCols" placeholder="id, name, ticket" oninput="onBuilderChange()">
+                </div>
+                <div class="control-group">
+                  <label>estimator =</label>
+                  <select id="modelSelect" onchange="onBuilderChange()">
+                    <optgroup label="Ensembles (Max Score)">
+                      <option value="stack_clf">StackingClassifier (All)</option>
+                      <option value="vote_clf">VotingClassifier (Soft)</option>
+                      <option value="stack_reg">StackingRegressor (All)</option>
+                      <option value="vote_reg">VotingRegressor (Mean)</option>
+                    </optgroup>
+                    <optgroup label="Classification">
+                      <option value="rf_clf" selected>RandomForestClassifier</option>
+                      <option value="log_reg">LogisticRegression</option>
+                      <option value="svm_clf">SVC (SVM Classifier)</option>
+                      <option value="dt_clf">DecisionTreeClassifier</option>
+                      <option value="tf_clf">ANN Classifier (tf.keras.Sequential)</option>
+                    </optgroup>
+                    <optgroup label="Regression">
+                      <option value="rf_reg">RandomForestRegressor</option>
+                      <option value="lin_reg">LinearRegression</option>
+                      <option value="svm_reg">SVR (SVM Regressor)</option>
+                      <option value="dt_reg">DecisionTreeRegressor</option>
+                      <option value="tf_reg">ANN Regressor (tf.keras.Sequential)</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label>prep_mode =</label>
+                  <select id="prepType" onchange="onBuilderChange()">
+                    <option value="strict">Strict Split (No Leakage + KNNImpute)</option>
+                    <option value="pipeline">Sklearn Pipeline + ColumnTransformer</option>
+                    <option value="simple">Simple (Median Impute + StandardScaler)</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label>tuning_mode =</label>
+                  <select id="boostType" onchange="onBuilderChange()">
+                    <option value="balanced">class_weight='balanced'</option>
+                    <option value="grid">GridSearchCV (5-Fold)</option>
+                    <option value="none">Standard Fit</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label>metric_average =</label>
+                  <select id="avgType" onchange="onBuilderChange()">
+                    <option value="binary">'binary' (2 classes)</option>
+                    <option value="weighted">'weighted' (3+ classes)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="toggles-bar">
+                <label class="toggle-pill"><input type="checkbox" id="chkThresh" onchange="onBuilderChange()"> Optimize F2 Threshold</label>
+                <label class="toggle-pill"><input type="checkbox" id="chkOversample" onchange="onBuilderChange()"> Pandas Oversample (Train)</label>
+                <label class="toggle-pill"><input type="checkbox" id="chkLogTarget" onchange="onBuilderChange()"> Log-Transform Target (Reg)</label>
+                <label class="toggle-pill"><input type="checkbox" id="chkCollinear" onchange="onBuilderChange()"> Drop Collinear (>0.95)</label>
+                <label class="toggle-pill"><input type="checkbox" id="chkPoly" onchange="onBuilderChange()"> PolynomialFeatures (deg=2)</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cell 2: Generated Python Code -->
+          <div class="jp-cell">
+            <div class="jp-prompt">In [2]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('genOutput', this)">Copy Cell</button>
+                <pre id="genOutput"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: AUTO-ENSEMBLING -->
+        <div id="ensemble" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt">In [3]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('ensClf', this)">Copy Cell</button>
+                <pre id="ensClf"># --- CLASSIFICATION: VOTING & STACKING ENSEMBLE ---
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier, StackingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, fbeta_score
+
+base_models = [
+    ('rf', RandomForestClassifier(n_estimators=200, class_weight='balanced', random_state=42)),
+    ('svm', SVC(kernel='rbf', C=10, probability=True, class_weight='balanced', random_state=42)),
+    ('dt', DecisionTreeClassifier(max_depth=7, class_weight='balanced', random_state=42))
+]
+
+voting_clf = VotingClassifier(estimators=base_models, voting='soft').fit(X_train, y_train)
+stack_clf = StackingClassifier(estimators=base_models, final_estimator=LogisticRegression(max_iter=1000), cv=5).fit(X_train, y_train)
+
+for name, m in [("Voting Ensemble", voting_clf), ("Stacking Ensemble", stack_clf)]:
+    p = m.predict(X_test)
+    print(f"=== {name} ===")
+    print(f"Accuracy  : {accuracy_score(y_test, p):.4f}")
+    print(f"Precision : {precision_score(y_test, p, average='binary', zero_division=0):.4f}")
+    print(f"Recall    : {recall_score(y_test, p, average='binary', zero_division=0):.4f}")
+    print(f"F1 Score  : {f1_score(y_test, p, average='binary', zero_division=0):.4f}")
+    print(f"F2 Score  : {fbeta_score(y_test, p, beta=2, average='binary', zero_division=0):.4f}\n")</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [4]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('ensReg', this)">Copy Cell</button>
+                <pre id="ensReg"># --- REGRESSION: VOTING & STACKING ENSEMBLE ---
+from sklearn.ensemble import RandomForestRegressor, VotingRegressor, StackingRegressor
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import numpy as np
+
+base_models = [
+    ('lr', LinearRegression()),
+    ('rf', RandomForestRegressor(n_estimators=200, random_state=42)),
+    ('svr', SVR(kernel='rbf', C=100)),
+    ('dt', DecisionTreeRegressor(max_depth=8, random_state=42))
+]
+
+voting_reg = VotingRegressor(estimators=base_models).fit(X_train, y_train)
+stack_reg = StackingRegressor(estimators=base_models, final_estimator=Ridge(), cv=5).fit(X_train, y_train)
+
+for name, m in [("Voting Regressor", voting_reg), ("Stacking Regressor", stack_reg)]:
+    p = m.predict(X_test)
+    mse = mean_squared_error(y_test, p)
+    print(f"=== {name} ===")
+    print(f"MSE: {mse:.4f} | RMSE: {np.sqrt(mse):.4f} | MAE: {mean_absolute_error(y_test, p):.4f} | R2: {r2_score(y_test, p):.4f}\n")</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: RUN ALL LOOP -->
+        <div id="compare" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt">In [5]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('compClf', this)">Copy Cell</button>
+                <pre id="compClf"># --- COMPARE ALL CLASSIFICATION MODELS ---
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, fbeta_score
+
+m1 = LogisticRegression(class_weight='balanced', max_iter=1000)
+m2 = SVC(kernel='rbf', C=10, probability=True, class_weight='balanced')
+m3 = DecisionTreeClassifier(max_depth=7, class_weight='balanced', random_state=42)
+m4 = RandomForestClassifier(n_estimators=200, class_weight='balanced', random_state=42)
+ens = VotingClassifier(estimators=[('lr', m1), ('svm', m2), ('dt', m3), ('rf', m4)], voting='soft')
+
+models = {"Logistic Reg": m1, "SVM": m2, "Decision Tree": m3, "Random Forest": m4, "Ensemble Vote": ens}
+
+AVG = 'binary' # change to 'weighted' if multiclass
+for name, m in models.items():
+    m.fit(X_train, y_train)
+    p = m.predict(X_test)
+    print(f"{name:15} | Acc: {accuracy_score(y_test, p):.4f} | Prec: {precision_score(y_test, p, average=AVG, zero_division=0):.4f} | Rec: {recall_score(y_test, p, average=AVG, zero_division=0):.4f} | F1: {f1_score(y_test, p, average=AVG, zero_division=0):.4f} | F2: {fbeta_score(y_test, p, beta=2, average=AVG, zero_division=0):.4f}")</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [6]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('compReg', this)">Copy Cell</button>
+                <pre id="compReg"># --- COMPARE ALL REGRESSION MODELS ---
+from sklearn.linear_model import LinearRegression
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor, VotingRegressor
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import numpy as np
+
+m1 = LinearRegression()
+m2 = SVR(kernel='rbf', C=100)
+m3 = DecisionTreeRegressor(max_depth=8, random_state=42)
+m4 = RandomForestRegressor(n_estimators=200, random_state=42)
+ens = VotingRegressor(estimators=[('lr', m1), ('svr', m2), ('dt', m3), ('rf', m4)])
+
+models = {"Linear Reg": m1, "SVR": m2, "Decision Tree": m3, "Random Forest": m4, "Ensemble Vote": ens}
+
+for name, m in models.items():
+    m.fit(X_train, y_train)
+    p = m.predict(X_test)
+    mse = mean_squared_error(y_test, p)
+    print(f"{name:15} | MSE: {mse:.4f} | RMSE: {np.sqrt(mse):.4f} | MAE: {mean_absolute_error(y_test, p):.4f} | R2: {r2_score(y_test, p):.4f}")</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: CROSS-VALIDATION -->
+        <div id="cv_tab" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt">In [7]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('cvClfCode', this)">Copy Cell</button>
+                <pre id="cvClfCode"># --- 5-FOLD STRATIFIED CROSS-VALIDATION (CLASSIFICATION) ---
+from sklearn.model_selection import StratifiedKFold, cross_validate
+from sklearn.metrics import make_scorer, fbeta_score
+import numpy as np
+
+f2_scorer = make_scorer(fbeta_score, beta=2, average='binary', zero_division=0)
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+scoring = {'accuracy': 'accuracy', 'precision': 'precision', 'recall': 'recall', 'f1': 'f1', 'f2': f2_scorer}
+
+cv_results = cross_validate(model, X_train, y_train, cv=skf, scoring=scoring, n_jobs=-1)
+for metric in ['accuracy', 'precision', 'recall', 'f1', 'f2']:
+    scores = cv_results[f'test_{metric}']
+    print(f"5-Fold CV {metric.upper():10} : {np.mean(scores):.4f} (+/- {np.std(scores):.4f})")</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [8]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('cvRegCode', this)">Copy Cell</button>
+                <pre id="cvRegCode"># --- 5-FOLD CROSS-VALIDATION (REGRESSION) ---
+from sklearn.model_selection import KFold, cross_validate
+import numpy as np
+
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+scoring = {'mse': 'neg_mean_squared_error', 'mae': 'neg_mean_absolute_error', 'r2': 'r2'}
+cv_results = cross_validate(model, X_train, y_train, cv=kf, scoring=scoring, n_jobs=-1)
+
+mse_s = -cv_results['test_mse']
+print(f"5-Fold CV MSE  : {np.mean(mse_s):.4f}")
+print(f"5-Fold CV RMSE : {np.mean(np.sqrt(mse_s)):.4f}")
+print(f"5-Fold CV MAE  : {np.mean(-cv_results['test_mae']):.4f}")
+print(f"5-Fold CV R2   : {np.mean(cv_results['test_r2']):.4f}")</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: PLOTS & VISUALIZATIONS -->
+        <div id="plots_tab" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt">In [9]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('plot1', this)">Copy Cell</button>
+                <pre id="plot1"># --- CORRELATION HEATMAP ---
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(10, 7))
+sns.heatmap(df.select_dtypes(include=['int64', 'float64']).corr(), annot=True, fmt=".2f", cmap="coolwarm")
+plt.title("Feature Correlation Heatmap")
+plt.tight_layout()
+plt.show()</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [10]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('plot2', this)">Copy Cell</button>
+                <pre id="plot2"># --- CONFUSION MATRIX & ROC-AUC CURVE ---
+import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+ConfusionMatrixDisplay.from_predictions(y_test, y_pred, cmap='Blues', ax=axes[0])
+axes[0].set_title("Confusion Matrix")
+
+RocCurveDisplay.from_predictions(y_test, y_pred, ax=axes[1])
+axes[1].plot([0, 1], [0, 1], 'k--')
+axes[1].set_title("ROC-AUC Curve")
+plt.tight_layout()
+plt.show()</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [11]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('plot3', this)">Copy Cell</button>
+                <pre id="plot3"># --- ACTUAL VS PREDICTED & RESIDUAL PLOT (REGRESSION) ---
+import matplotlib.pyplot as plt
+
+residuals = y_test - y_pred
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+axes[0].scatter(y_test, y_pred, alpha=0.6)
+axes[0].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
+axes[0].set_title("Actual vs. Predicted")
+
+axes[1].scatter(y_pred, residuals, alpha=0.6, color='darkorange')
+axes[1].axhline(0, color='r', linestyle='--', lw=2)
+axes[1].set_title("Residual Plot")
+plt.tight_layout()
+plt.show()</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 7: FEATURE ENGINEERING & IMBALANCE -->
+        <div id="fe_tab" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt">In [12]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('fe1', this)">Copy Cell</button>
+                <pre id="fe1"># --- PURE-PANDAS RANDOM OVERSAMPLING (NO IMBLEARN REQUIRED) ---
+train_df = pd.DataFrame(X_train).copy()
+train_df['__target__'] = np.array(y_train)
+
+max_size = train_df['__target__'].value_counts().max()
+balanced_parts = [g.sample(max_size, replace=True, random_state=42) for _, g in train_df.groupby('__target__')]
+train_balanced = pd.concat(balanced_parts).sample(frac=1, random_state=42)
+
+y_train = train_balanced['__target__'].values
+X_train = train_balanced.drop('__target__', axis=1).values
+print("Balanced Class Counts:\n", pd.Series(y_train).value_counts())</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [13]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('fe2', this)">Copy Cell</button>
+                <pre id="fe2"># --- MANUAL THRESHOLD TUNING FOR CLASSIFICATION ---
+# Lowering threshold from 0.50 to 0.38 gently boosts Recall & F2 without tanking Accuracy!
+probs = model.predict_proba(X_test)[:, 1]
+y_pred = (probs >= 0.38).astype(int)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 8: TENSORFLOW SEQUENTIAL ANN -->
+        <div id="tf_seq" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt">In [14]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('tfClfCode', this)">Copy Cell</button>
+                <pre id="tfClfCode"># --- 1. TENSORFLOW SEQUENTIAL ANN: BINARY CLASSIFICATION ---
+import tensorflow as tf
+
+tf.random.set_seed(42)
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=60,
+    batch_size=32,
+    validation_split=0.15,
+    callbacks=[early_stop],
+    verbose=1
+)
+
+y_pred_prob = model.predict(X_test).flatten()
+y_pred = (y_pred_prob >= 0.5).astype(int)</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [15]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('tfMultiCode', this)">Copy Cell</button>
+                <pre id="tfMultiCode"># --- 2. TENSORFLOW SEQUENTIAL ANN: MULTICLASS CLASSIFICATION (3+ CLASSES) ---
+import tensorflow as tf
+import numpy as np
+
+tf.random.set_seed(42)
+num_classes = len(np.unique(y_train))
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(num_classes, activation='softmax')
+])
+
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=60,
+    batch_size=32,
+    validation_split=0.15,
+    callbacks=[early_stop],
+    verbose=1
+)
+
+y_pred = np.argmax(model.predict(X_test), axis=1)</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="jp-cell">
+            <div class="jp-prompt">In [16]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('tfRegCode', this)">Copy Cell</button>
+                <pre id="tfRegCode"># --- 3. TENSORFLOW SEQUENTIAL ANN: REGRESSION ---
+import tensorflow as tf
+
+tf.random.set_seed(42)
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(1, activation='linear')
+])
+
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
+    loss='mse',
+    metrics=['mae']
+)
+
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=80,
+    batch_size=32,
+    validation_split=0.15,
+    callbacks=[early_stop],
+    verbose=1
+)
+
+y_pred = model.predict(X_test).flatten()</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 9: NUMPY BACKPROPAGATION -->
+        <div id="numpy_nn" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt">In [17]:</div>
+            <div class="jp-cell-body">
+              <div class="jp-input-area">
+                <button class="copy-btn" onclick="copyCode('numpyCode', this)">Copy Cell</button>
+                <pre id="numpyCode"># --- ANN BACKPROPAGATION IN PURE NUMPY (IF REQUIRED WITHOUT TENSORFLOW) ---
+import numpy as np
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
+
+def derivatives_sigmoid(x):
+    return x * (1 - x)
+
+X_nn = np.array(X_train, dtype=float)
+y_nn = np.array(y_train, dtype=float).reshape(-1, 1)
+
+epoch = 5000
+lr = 0.1
+inputlayer_neurons = X_nn.shape[1]
+hiddenlayer_neurons = 8
+output_neurons = 1
+
+np.random.seed(42)
+wh = np.random.uniform(size=(inputlayer_neurons, hiddenlayer_neurons))
+bh = np.random.uniform(size=(1, hiddenlayer_neurons))
+wout = np.random.uniform(size=(hiddenlayer_neurons, output_neurons))
+bout = np.random.uniform(size=(1, output_neurons))
+
+for i in range(epoch):
+    hinp = np.dot(X_nn, wh) + bh
+    hlayer_act = sigmoid(hinp)
+    outinp = np.dot(hlayer_act, wout) + bout
+    output = sigmoid(outinp)
+    
+    EO = y_nn - output
+    d_output = EO * derivatives_sigmoid(output)
+    EH = d_output.dot(wout.T)
+    d_hiddenlayer = EH * derivatives_sigmoid(hlayer_act)
+    
+    wout += hlayer_act.T.dot(d_output) * lr
+    bout += np.sum(d_output, axis=0, keepdims=True) * lr
+    wh += X_nn.T.dot(d_hiddenlayer) * lr
+    bh += np.sum(d_hiddenlayer, axis=0, keepdims=True) * lr
+
+hlayer_test = sigmoid(np.dot(np.array(X_test, dtype=float), wh) + bh)
+y_pred_prob = sigmoid(np.dot(hlayer_test, wout) + bout).flatten()
+y_pred = (y_pred_prob > 0.5).astype(int)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 10: ERROR DOCTOR -->
+        <div id="err_doc" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt out">Out[Err]:</div>
+            <div class="jp-cell-body">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <b>🩺 Interactive Traceback & Bug Fixer (23 Common Errors)</b>
+                <input type="text" id="errFilter" placeholder="Filter traceback (e.g. 'nan', 'float', 'multiclass')..." oninput="renderErrorDoctor(this.value)" style="width:280px;">
+              </div>
+              <div id="errorDoctorList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 11: HYPERPARAMETER CHEAT SHEET -->
+        <div id="params_tab" class="tab-content hidden">
+          <div class="jp-cell">
+            <div class="jp-prompt"></div>
+            <div class="jp-cell-body jp-markdown">
+              <h4>## Syllabus Model Hyperparameter Quick Reference</h4>
+              <table class="readme-table">
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>Key Parameters</th>
+                    <th>Recommended Exam Setting</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>LinearRegression / Ridge</b></td>
+                    <td><code class="inline">fit_intercept=True</code>, <code class="inline">alpha=1.0</code></td>
+                    <td>Use <code class="inline">RobustScaler</code> + <code class="inline">TransformedTargetRegressor</code> for skewed targets.</td>
+                  </tr>
+                  <tr>
+                    <td><b>LogisticRegression</b></td>
+                    <td><code class="inline">C=1.0</code>, <code class="inline">max_iter=1000</code>, <code class="inline">class_weight='balanced'</code></td>
+                    <td>Set <code class="inline">max_iter=1000</code> to avoid convergence warnings.</td>
+                  </tr>
+                  <tr>
+                    <td><b>SVC / SVR (SVM)</b></td>
+                    <td><code class="inline">kernel='rbf'</code>, <code class="inline">C=10.0</code>, <code class="inline">gamma='scale'</code>, <code class="inline">probability=True</code></td>
+                    <td>For <code class="inline">SVR</code> on large targets (prices), use <code class="inline">C=100</code> or <code class="inline">1000</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><b>DecisionTree (Clf/Reg)</b></td>
+                    <td><code class="inline">max_depth=7</code>, <code class="inline">min_samples_split=5</code></td>
+                    <td>Constrain <code class="inline">max_depth=5..10</code> so the tree does not overfit noise.</td>
+                  </tr>
+                  <tr>
+                    <td><b>RandomForest (Clf/Reg)</b></td>
+                    <td><code class="inline">n_estimators=200</code>, <code class="inline">max_depth=12</code>, <code class="inline">class_weight='balanced'</code></td>
+                    <td>Best single tabular model out-of-the-box.</td>
+                  </tr>
+                  <tr>
+                    <td><b>tf.keras.models.Sequential (ANN)</b></td>
+                    <td><code class="inline">Dense(64, activation='relu')</code>, <code class="inline">optimizer='adam'</code>, <code class="inline">epochs=60</code></td>
+                    <td>Output layer: <code class="inline">'sigmoid'</code> (binary), <code class="inline">'softmax'</code> (multiclass), <code class="inline">'linear'</code> (regression).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('leftSidebar').classList.toggle('collapsed');
+    }
+
+    // --- 23 COMMON PYTHON / ML ERRORS DATABASE ---
+    const ERROR_DB = [
+      {
+        err: "ValueError: Mix of label input types (string and number); Got ['No' 'Yes'] and [1]",
+        cause: "In Pandas 2.0+, y has dtype 'str'/'string' instead of 'object', so LabelEncoder was skipped while y_pred is 0/1 integers.",
+        fix: "if not pd.api.types.is_numeric_dtype(y) or y.dtype == 'bool':\n    y = LabelEncoder().fit_transform(y.astype(str))"
+      },
+      {
+        err: "ValueError: Target is multiclass but average='binary'",
+        cause: "Your target column y has 3+ unique classes (or continuous floats), while precision/recall/f1/fbeta_score is set to average='binary'.",
+        fix: "# Change average='binary' to average='weighted':\nf2 = fbeta_score(y_test, y_pred, beta=2, average='weighted', zero_division=0)"
+      },
+      {
+        err: "ValueError: Unknown label type: 'continuous'",
+        cause: "You passed a continuous float target column (meant for Regression) into a Classifier (or vice versa).",
+        fix: "# Switch to a Regressor (e.g. RandomForestRegressor) OR cast discrete labels to int:\ny = y.astype(int)"
+      },
+      {
+        err: "ValueError: could not convert string to float: '?'",
+        cause: "Feature matrix X still contains text strings or missing symbols ('?', '-', '$') when passed into fit().",
+        fix: "df = df.replace(['?', 'NA', 'null', '-', ' '], np.nan)\nX = pd.get_dummies(X, drop_first=True)"
+      },
+      {
+        err: "ValueError: Input X contains NaN",
+        cause: "Missing values (NaN) still exist in X_train or X_test.",
+        fix: "from sklearn.impute import SimpleImputer\nimp = SimpleImputer(strategy='median')\nX_train = imp.fit_transform(X_train)\nX_test = imp.transform(X_test)"
+      },
+      {
+        err: "KeyError: 'target' not found in axis",
+        cause: "Column name has leading/trailing spaces or different spelling in the CSV.",
+        fix: "df.columns = df.columns.str.strip()\nprint(df.columns.tolist())"
+      },
+      {
+        err: "ValueError: X has 45 features, but model is expecting 52 features",
+        cause: "pd.get_dummies() created different columns on X_train and X_test.",
+        fix: "X_train, X_test = X_train.align(X_test, join='left', axis=1, fill_value=0)"
+      },
+      {
+        err: "ValueError: The least populated class in y has only 1 member",
+        cause: "train_test_split(..., stratify=y) failed because a class in y appears only once.",
+        fix: "valid_classes = y.value_counts()[y.value_counts() >= 2].index\ndf = df[df[target_col].isin(valid_classes)]"
+      },
+      {
+        err: "ConvergenceWarning: Maximum iterations reached",
+        cause: "Features are unscaled or max_iter is too small in LogisticRegression.",
+        fix: "model = LogisticRegression(max_iter=2000)"
+      },
+      {
+        err: "AttributeError: 'SVC' object has no attribute 'predict_proba'",
+        cause: "SVC() disables probability estimates by default.",
+        fix: "model = SVC(kernel='rbf', probability=True)"
+      },
+      {
+        err: "DataConversionWarning: A column-vector y was passed when a 1d array was expected",
+        cause: "y_train has shape (N, 1) instead of (N,).",
+        fix: "y_train = np.ravel(y_train)\ny_test = np.ravel(y_test)"
+      },
+      {
+        err: "ValueError: Found input variables with inconsistent numbers of samples",
+        cause: "Rows were dropped from X without dropping them from y.",
+        fix: "df = df.dropna(subset=[target_col])\nX = df.drop(target_col, axis=1)\ny = df[target_col]"
+      },
+      {
+        err: "UnicodeDecodeError: 'utf-8' codec can't decode byte",
+        cause: "CSV is encoded in Latin-1 / Windows-1252.",
+        fix: "df = pd.read_csv('dataset.csv', encoding='latin1')"
+      },
+      {
+        err: "ParserError: Error tokenizing data",
+        cause: "CSV uses ';' or '\\t' delimiter or has corrupted rows.",
+        fix: "df = pd.read_csv('dataset.csv', sep=None, engine='python', on_bad_lines='skip')"
+      },
+      {
+        err: "TypeError: Encoders require their input to be uniformly strings or numbers",
+        cause: "Categorical column has mixed float and string types.",
+        fix: "X[cat_cols] = X[cat_cols].astype(str)"
+      },
+      {
+        err: "UndefinedMetricWarning: Precision or F-score is ill-defined",
+        cause: "Model predicted 0 positive samples due to class imbalance.",
+        fix: "model = RandomForestClassifier(class_weight='balanced', random_state=42)"
+      },
+      {
+        err: "MemoryError: Unable to allocate array",
+        cause: "One-Hot Encoding was run on a high-cardinality ID/Name column.",
+        fix: "high_card = [c for c in X.select_dtypes(include=['object', 'string']).columns if X[c].nunique() > 20]\nX = X.drop(columns=high_card)"
+      },
+      {
+        err: "ValueError: Failed to convert a NumPy array to a Tensor (Unsupported object type float/object)",
+        cause: "X_train or y_train has dtype='object' when passed into TensorFlow model.fit().",
+        fix: "X_train = np.asarray(X_train).astype('float32')\nX_test = np.asarray(X_test).astype('float32')\ny_train = np.asarray(y_train).astype('float32')"
+      },
+      {
+        err: "ValueError: Input y contains NaN",
+        cause: "Target column has missing values.",
+        fix: "df = df.dropna(subset=[target_col])"
+      },
+      {
+        err: "R2 Score is negative on SVR or TensorFlow Sequential Regressor",
+        cause: "Target scale is large while SVR(C=1.0) or learning rate is too small.",
+        fix: "model = TransformedTargetRegressor(regressor=SVR(C=100), func=np.log1p, inverse_func=np.expm1)"
+      },
+      {
+        err: "ModuleNotFoundError: No module named 'imblearn'",
+        cause: "imblearn is not installed on the lab machine.",
+        fix: "# Use pure-Pandas oversampling from Cell [7]!"
+      },
+      {
+        err: "ValueError: Classification metrics can't handle a mix of binary and continuous targets",
+        cause: "tf.keras.Sequential model.predict(X_test) returns continuous probabilities (N, 1) instead of class integers 0/1.",
+        fix: "y_pred = (model.predict(X_test).flatten() >= 0.5).astype(int)"
+      }
+    ];
+
+    function renderErrorDoctor(query = "") {
+      const container = document.getElementById('errorDoctorList');
+      const q = query.toLowerCase().trim();
+      const filtered = ERROR_DB.filter(item =>
+        item.err.toLowerCase().includes(q) ||
+        item.cause.toLowerCase().includes(q) ||
+        item.fix.toLowerCase().includes(q)
+      );
+      if (filtered.length === 0) {
+        container.innerHTML = `<p>No matching tracebacks found.</p>`;
+        return;
+      }
+      container.innerHTML = filtered.map((item, idx) => `
+        <div class="error-card">
+          <div class="error-title">${item.err}</div>
+          <div class="error-cause"><b>Cause:</b> ${item.cause}</div>
+          <div style="position:relative;">
+            <button class="copy-btn" onclick="copyCode('errFix_${idx}', this)">Copy Fix</button>
+            <div class="error-fix" id="errFix_${idx}">${item.fix}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.remove('hidden');
+      if (btn) btn.classList.add('active');
+    }
+
+    function copyCode(elementId, btn) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text);
+      if (btn) {
+        const orig = btn.innerText;
+        btn.innerText = "✓ Copied";
+        setTimeout(() => btn.innerText = orig, 1200);
+      }
+    }
+
+    // --- LOCALSTORAGE STATE SAVING ---
+    const STATE_KEYS = ['csvName', 'targetCol', 'dropCols', 'modelSelect', 'prepType', 'boostType', 'avgType', 'chkThresh', 'chkOversample', 'chkLogTarget', 'chkCollinear', 'chkPoly', 'chk1', 'chk2', 'chk3', 'chk4', 'chk5'];
+
+    function saveState() {
+      const state = {};
+      STATE_KEYS.forEach(k => {
+        const el = document.getElementById(k);
+        if (!el) return;
+        state[k] = el.type === 'checkbox' ? el.checked : el.value;
+      });
+      try { localStorage.setItem('ml_hub_v51_state', JSON.stringify(state)); } catch (e) {}
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem('ml_hub_v51_state');
+        if (!raw) return;
+        const state = JSON.parse(raw);
+        STATE_KEYS.forEach(k => {
+          const el = document.getElementById(k);
+          if (!el || state[k] === undefined) return;
+          if (el.type === 'checkbox') el.checked = state[k];
+          else el.value = state[k];
+        });
+      } catch (e) {}
+    }
+
+    function resetBuilder() {
+      try { localStorage.removeItem('ml_hub_v51_state'); } catch (e) {}
+      document.getElementById('csvName').value = 'dataset.csv';
+      document.getElementById('targetCol').value = 'target';
+      document.getElementById('dropCols').value = '';
+      document.getElementById('modelSelect').value = 'rf_clf';
+      document.getElementById('prepType').value = 'strict';
+      document.getElementById('boostType').value = 'balanced';
+      document.getElementById('avgType').value = 'binary';
+      ['chkThresh', 'chkOversample', 'chkLogTarget', 'chkCollinear', 'chkPoly'].forEach(id => document.getElementById(id).checked = false);
+      generateCode();
+    }
+
+    function onBuilderChange() {
+      saveState();
+      generateCode();
+    }
+
+    function getBuilderBlocks() {
+      const csv = document.getElementById('csvName').value.trim() || 'dataset.csv';
+      const target = document.getElementById('targetCol').value.trim() || 'target';
+      const dropRaw = document.getElementById('dropCols').value.trim();
+      const mod = document.getElementById('modelSelect').value;
+      const prep = document.getElementById('prepType').value;
+      const boost = document.getElementById('boostType').value;
+      const avg = document.getElementById('avgType').value;
+
+      const optThresh = document.getElementById('chkThresh').checked;
+      const optOversample = document.getElementById('chkOversample').checked;
+      const optLogTarget = document.getElementById('chkLogTarget').checked;
+      const optCollinear = document.getElementById('chkCollinear').checked;
+      const optPoly = document.getElementById('chkPoly').checked;
+
+      const isClf = mod.endsWith('_clf') || mod === 'log_reg';
+      const isTF = mod === 'tf_clf' || mod === 'tf_reg';
+      const useBalanced = (boost === 'balanced' && isClf);
+      const cw = useBalanced ? ", class_weight='balanced'" : "";
+
+      const dropList = dropRaw
+        ? dropRaw.split(',').map(s => `'${s.trim()}'`).filter(s => s !== "''").join(', ')
+        : '';
+
+      const modelMap = {
+        stack_clf: {
+          imp: "from sklearn.ensemble import RandomForestClassifier, StackingClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.svm import SVC\nfrom sklearn.tree import DecisionTreeClassifier",
+          init: `base_models = [\n    ('rf', RandomForestClassifier(n_estimators=200${cw}, random_state=42)),\n    ('svm', SVC(kernel='rbf', C=10, probability=True${cw}, random_state=42)),\n    ('dt', DecisionTreeClassifier(max_depth=7${cw}, random_state=42))\n]\nmodel = StackingClassifier(estimators=base_models, final_estimator=LogisticRegression(max_iter=1000), cv=5)`
+        },
+        vote_clf: {
+          imp: "from sklearn.ensemble import RandomForestClassifier, VotingClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.svm import SVC",
+          init: `base_models = [\n    ('lr', LogisticRegression(max_iter=1000${cw})),\n    ('rf', RandomForestClassifier(n_estimators=200${cw}, random_state=42)),\n    ('svm', SVC(kernel='rbf', C=10, probability=True${cw}, random_state=42))\n]\nmodel = VotingClassifier(estimators=base_models, voting='soft')`
+        },
+        stack_reg: {
+          imp: "from sklearn.ensemble import RandomForestRegressor, StackingRegressor\nfrom sklearn.linear_model import LinearRegression, Ridge\nfrom sklearn.svm import SVR\nfrom sklearn.tree import DecisionTreeRegressor",
+          init: `base_models = [\n    ('lr', LinearRegression()),\n    ('rf', RandomForestRegressor(n_estimators=200, random_state=42)),\n    ('svr', SVR(kernel='rbf', C=100)),\n    ('dt', DecisionTreeRegressor(max_depth=8, random_state=42))\n]\nmodel = StackingRegressor(estimators=base_models, final_estimator=Ridge(), cv=5)`
+        },
+        vote_reg: {
+          imp: "from sklearn.ensemble import RandomForestRegressor, VotingRegressor\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.svm import SVR",
+          init: `base_models = [\n    ('lr', LinearRegression()),\n    ('rf', RandomForestRegressor(n_estimators=200, random_state=42)),\n    ('svr', SVR(kernel='rbf', C=100))\n]\nmodel = VotingRegressor(estimators=base_models)`
+        },
+        rf_clf: {
+          imp: "from sklearn.ensemble import RandomForestClassifier",
+          init: `model = RandomForestClassifier(n_estimators=200${cw}, random_state=42)`,
+          grid: `{'n_estimators': [100, 200], 'max_depth': [7, 12, None], 'min_samples_split': [2, 5]}`
+        },
+        log_reg: {
+          imp: "from sklearn.linear_model import LogisticRegression",
+          init: `model = LogisticRegression(max_iter=1000${cw})`,
+          grid: `{'C': [0.1, 1.0, 10.0]}`
+        },
+        svm_clf: {
+          imp: "from sklearn.svm import SVC",
+          init: `model = SVC(kernel='rbf', C=10.0, probability=True${cw}, random_state=42)`,
+          grid: `{'C': [0.1, 1, 10, 100], 'gamma': ['scale', 'auto'], 'kernel': ['rbf']}`
+        },
+        dt_clf: {
+          imp: "from sklearn.tree import DecisionTreeClassifier",
+          init: `model = DecisionTreeClassifier(max_depth=7${cw}, random_state=42)`,
+          grid: `{'max_depth': [3, 5, 7, 10, None], 'min_samples_split': [2, 5, 10]}`
+        },
+        tf_clf: {
+          imp: "import tensorflow as tf"
+        },
+        rf_reg: {
+          imp: "from sklearn.ensemble import RandomForestRegressor",
+          init: `model = RandomForestRegressor(n_estimators=200, random_state=42)`,
+          grid: `{'n_estimators': [100, 200], 'max_depth': [8, 15, None], 'min_samples_split': [2, 5]}`
+        },
+        lin_reg: {
+          imp: "from sklearn.linear_model import LinearRegression",
+          init: `model = LinearRegression()`,
+          grid: `{'fit_intercept': [True, False]}`
+        },
+        svm_reg: {
+          imp: "from sklearn.svm import SVR",
+          init: `model = SVR(kernel='rbf', C=100.0)`,
+          grid: `{'C': [1, 10, 100, 500], 'gamma': ['scale', 'auto'], 'kernel': ['rbf']}`
+        },
+        dt_reg: {
+          imp: "from sklearn.tree import DecisionTreeRegressor",
+          init: `model = DecisionTreeRegressor(max_depth=7, random_state=42)`,
+          grid: `{'max_depth': [3, 5, 7, 10, None], 'min_samples_split': [2, 5, 10]}`
+        },
+        tf_reg: {
+          imp: "import tensorflow as tf"
+        }
+      };
+
+      let extraImports = [];
+      if (prep === 'pipeline') {
+        extraImports.push("from sklearn.pipeline import Pipeline");
+        extraImports.push("from sklearn.compose import ColumnTransformer");
+        extraImports.push("from sklearn.preprocessing import RobustScaler, OneHotEncoder, LabelEncoder");
+        extraImports.push("from sklearn.impute import KNNImputer, SimpleImputer");
+      } else if (prep === 'strict') {
+        extraImports.push("from sklearn.preprocessing import RobustScaler, LabelEncoder");
+        extraImports.push("from sklearn.impute import KNNImputer, SimpleImputer");
+      } else {
+        extraImports.push("from sklearn.preprocessing import StandardScaler, LabelEncoder");
+        extraImports.push("from sklearn.impute import SimpleImputer");
+      }
+
+      if (boost === 'grid' && modelMap[mod].grid && prep !== 'pipeline' && !isTF) {
+        extraImports.push("from sklearn.model_selection import GridSearchCV");
+      }
+      if (!isClf && optLogTarget && !isTF) {
+        extraImports.push("from sklearn.compose import TransformedTargetRegressor");
+      }
+      if (optPoly && prep !== 'pipeline') {
+        extraImports.push("from sklearn.preprocessing import PolynomialFeatures");
+      }
+
+      const metricImports = isClf
+        ? "from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, fbeta_score, confusion_matrix"
+        : "from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score";
+
+      const importsBlock = `import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+${extraImports.join('\n')}
+${modelMap[mod].imp}
+${metricImports}`;
+
+      const customDropLine = dropList ? `\ndf = df.drop(columns=[${dropList}], errors='ignore')` : '';
+      const collinearBlock = optCollinear ? `
+# Drop zero-variance & highly correlated (>0.95) numeric features
+num_tmp = X.select_dtypes(include=['int64', 'float64'])
+X = X.drop(columns=[c for c in num_tmp.columns if num_tmp[c].nunique() <= 1])
+corr_matrix = X.select_dtypes(include=['int64', 'float64']).corr().abs()
+upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+drop_corr = [col for col in upper.columns if any(upper[col] > 0.95)]
+if drop_corr:
+    X = X.drop(columns=drop_corr)` : '';
+
+      let loadAndPrepBlock = '';
+      if (prep === 'pipeline') {
+        loadAndPrepBlock = `# 1. Load & Clean Weird Symbols
+df = pd.read_csv('${csv}')
+df.columns = df.columns.str.strip()
+df = df.replace(['?', 'NA', 'null', 'None', '-', ' ', ''], np.nan)
+df = df.drop_duplicates()${customDropLine}
+
+target_col = '${target}'
+df = df.dropna(subset=[target_col])
+df = df.loc[:, df.isnull().mean() < 0.5]
+
+X = df.drop(target_col, axis=1)
+y = df[target_col]
+
+for col in X.select_dtypes(include=['object', 'string']).columns:
+    cleaned = X[col].astype(str).str.replace(r'[$,%]', '', regex=True).str.strip()
+    converted = pd.to_numeric(cleaned, errors='coerce')
+    if converted.notnull().mean() > 0.7:
+        X[col] = converted
+    elif X[col].nunique() > 20:
+        X = X.drop(col, axis=1)
+${collinearBlock}
+if not pd.api.types.is_numeric_dtype(y) or y.dtype == 'bool':
+    y = LabelEncoder().fit_transform(y.astype(str))
+
+# 2. Strict Train-Test Split BEFORE Preprocessing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42${isClf ? ', stratify=y' : ''})
+
+num_cols = X_train.select_dtypes(include=['int64', 'float64']).columns.tolist()
+cat_cols = X_train.select_dtypes(include=['object', 'string', 'category', 'bool']).columns.tolist()
+
+num_pipe = Pipeline([('imputer', KNNImputer(n_neighbors=5)), ('scaler', RobustScaler())])
+cat_pipe = Pipeline([('imputer', SimpleImputer(strategy='most_frequent')), ('ohe', OneHotEncoder(handle_unknown='ignore', sparse_output=False))])
+
+preprocessor = ColumnTransformer([('num', num_pipe, num_cols), ('cat', cat_pipe, cat_cols)])
+X_train = preprocessor.fit_transform(X_train)
+X_test = preprocessor.transform(X_test)`;
+      } else if (prep === 'strict') {
+        loadAndPrepBlock = `# 1. Load & Clean Weird Symbols
+df = pd.read_csv('${csv}')
+df.columns = df.columns.str.strip()
+df = df.replace(['?', 'NA', 'null', 'None', '-', ' ', ''], np.nan)
+df = df.drop_duplicates()${customDropLine}
+
+target_col = '${target}'
+df = df.dropna(subset=[target_col])
+df = df.loc[:, df.isnull().mean() < 0.5]
+
+X = df.drop(target_col, axis=1)
+y = df[target_col]
+
+# 2. Recover hidden numeric columns & drop high-cardinality ID/Name columns
+for col in X.select_dtypes(include=['object', 'string']).columns:
+    cleaned = X[col].astype(str).str.replace(r'[$,%]', '', regex=True).str.strip()
+    converted = pd.to_numeric(cleaned, errors='coerce')
+    if converted.notnull().mean() > 0.7:
+        X[col] = converted
+    elif X[col].nunique() > 20:
+        X = X.drop(col, axis=1)
+${collinearBlock}
+if not pd.api.types.is_numeric_dtype(y) or y.dtype == 'bool':
+    y = LabelEncoder().fit_transform(y.astype(str))
+
+# 3. Strict Train-Test Split BEFORE Imputation/Clipping/Scaling
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42${isClf ? ', stratify=y' : ''})
+X_train, X_test = X_train.copy(), X_test.copy()
+
+num_cols = X_train.select_dtypes(include=['int64', 'float64']).columns
+cat_cols = X_train.select_dtypes(include=['object', 'string', 'category', 'bool']).columns
+
+if len(num_cols) > 0:
+    num_imp = KNNImputer(n_neighbors=5)
+    X_train[num_cols] = num_imp.fit_transform(X_train[num_cols])
+    X_test[num_cols] = num_imp.transform(X_test[num_cols])
+    lower, upper = X_train[num_cols].quantile(0.01), X_train[num_cols].quantile(0.99)
+    X_train[num_cols] = X_train[num_cols].clip(lower, upper, axis=1)
+    X_test[num_cols] = X_test[num_cols].clip(lower, upper, axis=1)
+
+if len(cat_cols) > 0:
+    cat_imp = SimpleImputer(strategy='most_frequent')
+    X_train[cat_cols] = cat_imp.fit_transform(X_train[cat_cols])
+    X_test[cat_cols] = cat_imp.transform(X_test[cat_cols])
+    X_train = pd.get_dummies(X_train, columns=cat_cols, drop_first=True)
+    X_test = pd.get_dummies(X_test, columns=cat_cols, drop_first=True)
+    X_train, X_test = X_train.align(X_test, join='left', axis=1, fill_value=0)
+
+scaler = RobustScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)`;
+      } else {
+        loadAndPrepBlock = `# 1. Load & Basic Clean
+df = pd.read_csv('${csv}')
+df.columns = df.columns.str.strip()
+df = df.replace(['?', 'NA', 'null', 'None', ''], np.nan)
+df = df.drop_duplicates()${customDropLine}
+
+target_col = '${target}'
+df = df.dropna(subset=[target_col])
+
+X = df.drop(target_col, axis=1)
+y = df[target_col]
+
+num_cols = X.select_dtypes(include=['int64', 'float64']).columns
+cat_cols = X.select_dtypes(include=['object', 'string', 'category', 'bool']).columns
+
+if len(num_cols) > 0:
+    X[num_cols] = SimpleImputer(strategy='median').fit_transform(X[num_cols])
+if len(cat_cols) > 0:
+    X[cat_cols] = SimpleImputer(strategy='most_frequent').fit_transform(X[cat_cols])
+    X = pd.get_dummies(X, columns=cat_cols, drop_first=True)
+
+if not pd.api.types.is_numeric_dtype(y) or y.dtype == 'bool':
+    y = LabelEncoder().fit_transform(y.astype(str))
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)`;
+      }
+
+      let postPrepAddons = '';
+      if (optPoly && prep !== 'pipeline') {
+        postPrepAddons += `\npoly = PolynomialFeatures(degree=2, include_bias=False)\nX_train = poly.fit_transform(X_train)\nX_test = poly.transform(X_test)\n`;
+      }
+      if (isClf && optOversample) {
+        postPrepAddons += `\ntrain_df = pd.DataFrame(X_train).copy()\ntrain_df['__y__'] = np.array(y_train)\nmax_sz = train_df['__y__'].value_counts().max()\ntrain_bal = pd.concat([g.sample(max_sz, replace=True, random_state=42) for _, g in train_df.groupby('__y__')]).sample(frac=1, random_state=42)\ny_train = train_bal['__y__'].values\nX_train = train_bal.drop('__y__', axis=1).values\n`;
+      }
+
+      let trainBlock = '';
+      if (mod === 'tf_clf') {
+        if (avg === 'binary') {
+          trainBlock = `# Build & Train ANN using TensorFlow Sequential (Binary Classification)
+tf.random.set_seed(42)
+X_train, X_test = np.asarray(X_train, dtype='float32'), np.asarray(X_test, dtype='float32')
+y_train, y_test = np.asarray(y_train, dtype='int32'), np.asarray(y_test, dtype='int32')
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True)
+model.fit(X_train, y_train, epochs=60, batch_size=32, validation_split=0.15, callbacks=[early_stop], verbose=1)
+
+probs = model.predict(X_test).flatten()
+y_pred = (probs >= ${optThresh ? '0.38' : '0.50'}).astype(int)`;
+        } else {
+          trainBlock = `# Build & Train ANN using TensorFlow Sequential (Multiclass Classification)
+tf.random.set_seed(42)
+X_train, X_test = np.asarray(X_train, dtype='float32'), np.asarray(X_test, dtype='float32')
+y_train, y_test = np.asarray(y_train, dtype='int32'), np.asarray(y_test, dtype='int32')
+num_classes = len(np.unique(y_train))
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(num_classes, activation='softmax')
+])
+
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True)
+model.fit(X_train, y_train, epochs=60, batch_size=32, validation_split=0.15, callbacks=[early_stop], verbose=1)
+
+y_pred = np.argmax(model.predict(X_test), axis=1)`;
+        }
+      } else if (mod === 'tf_reg') {
+        trainBlock = `# Build & Train ANN using TensorFlow Sequential (Regression)
+tf.random.set_seed(42)
+X_train, X_test = np.asarray(X_train, dtype='float32'), np.asarray(X_test, dtype='float32')
+y_train, y_test = np.asarray(y_train, dtype='float32'), np.asarray(y_test, dtype='float32')
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dense(1, activation='linear')
+])
+
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01), loss='mse', metrics=['mae'])
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+model.fit(X_train, y_train, epochs=80, batch_size=32, validation_split=0.15, callbacks=[early_stop], verbose=1)
+
+y_pred = model.predict(X_test).flatten()`;
+      } else {
+        let modelInitCode = modelMap[mod].init;
+        if (!isClf && optLogTarget) {
+          modelInitCode += `\nmodel = TransformedTargetRegressor(regressor=model, func=np.log1p, inverse_func=np.expm1)`;
+        }
+
+        if (boost === 'grid' && modelMap[mod].grid && prep !== 'pipeline' && !(!isClf && optLogTarget)) {
+          trainBlock = `# Model Training with GridSearchCV
+${modelInitCode}
+params = ${modelMap[mod].grid}
+grid = GridSearchCV(model, params, cv=5, n_jobs=-1)
+grid.fit(X_train, y_train)
+print("Best Hyperparameters:", grid.best_params_)
+model = grid.best_estimator_
+y_pred = model.predict(X_test)`;
+        } else {
+          trainBlock = `# Model Training & Prediction
+${modelInitCode}
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)`;
+        }
+
+        if (isClf && optThresh && avg === 'binary') {
+          trainBlock += `\n
+if hasattr(model, "predict_proba"):
+    probs = model.predict_proba(X_test)[:, 1]
+    best_th, best_score = 0.5, -1
+    for th in np.arange(0.30, 0.75, 0.02):
+        preds = (probs >= th).astype(int)
+        f2_tmp = fbeta_score(y_test, preds, beta=2, average='binary', zero_division=0)
+        acc_tmp = accuracy_score(y_test, preds)
+        combined = (0.65 * f2_tmp) + (0.35 * acc_tmp)
+        if combined > best_score:
+            best_score, best_th = combined, th
+    print(f"Optimal Balanced Threshold: {best_th:.2f}")
+    y_pred = (probs >= best_th).astype(int)`;
+        }
+      }
+
+      const evalBlock = isClf
+        ? `# Evaluation Metrics
+acc = accuracy_score(y_test, y_pred)
+prec = precision_score(y_test, y_pred, average='${avg}', zero_division=0)
+rec = recall_score(y_test, y_pred, average='${avg}', zero_division=0)
+f1 = f1_score(y_test, y_pred, average='${avg}', zero_division=0)
+f2 = fbeta_score(y_test, y_pred, beta=2, average='${avg}', zero_division=0)
+
+print(f"Accuracy  : {acc:.4f}")
+print(f"Precision : {prec:.4f}")
+print(f"Recall    : {rec:.4f}")
+print(f"F1 Score  : {f1:.4f}")
+print(f"F2 Score  : {f2:.4f}")
+print("\\nConfusion Matrix:\\n", confusion_matrix(y_test, y_pred))`
+        : `# Evaluation Metrics
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"MSE      : {mse:.4f}")
+print(f"RMSE     : {rmse:.4f}")
+print(f"MAE      : {mae:.4f}")
+print(f"R2 Score : {r2:.4f}")`;
+
+      return { importsBlock, loadAndPrepBlock: loadAndPrepBlock + postPrepAddons, trainBlock, evalBlock };
+    }
+
+    function generateCode() {
+      const b = getBuilderBlocks();
+      document.getElementById('genOutput').innerText = `${b.importsBlock}\n\n${b.loadAndPrepBlock}\n\n${b.trainBlock}\n\n${b.evalBlock}`;
+    }
+
+    function toLines(str) {
+      const lines = str.split('\n');
+      return lines.map((l, i) => (i < lines.length - 1 ? l + '\n' : l));
+    }
+
+    function downloadIPYNB() {
+      const b = getBuilderBlocks();
+      const edaCode = `print("Shape:", df.shape)\nprint("\\nColumns:", df.columns.tolist())\nprint("\\nMissing Values:\\n", df.isnull().sum())\ndf.head()`;
+      const nb = {
+        cells: [
+          { cell_type: "code", execution_count: 1, metadata: {}, outputs: [], source: toLines(b.importsBlock) },
+          { cell_type: "code", execution_count: 2, metadata: {}, outputs: [], source: toLines(b.loadAndPrepBlock) },
+          { cell_type: "code", execution_count: 3, metadata: {}, outputs: [], source: toLines(edaCode) },
+          { cell_type: "code", execution_count: 4, metadata: {}, outputs: [], source: toLines(b.trainBlock) },
+          { cell_type: "code", execution_count: 5, metadata: {}, outputs: [], source: toLines(b.evalBlock) }
+        ],
+        metadata: {
+          kernelspec: { display_name: "Python 3 (ipykernel)", language: "python", name: "python3" },
+          language_info: { name: "python", version: "3.10.0" }
+        },
+        nbformat: 4,
+        nbformat_minor: 5
+      };
+      const blob = new Blob([JSON.stringify(nb, null, 2)], { type: "application/json" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "Untitled1.ipynb";
+      a.click();
+    }
+
+    function downloadPY() {
+      const code = document.getElementById('genOutput').innerText;
+      const blob = new Blob([code], { type: "text/x-python" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "solution.py";
+      a.click();
+    }
+
+    function runGlobalSearch(query) {
+      const box = document.getElementById('searchResultsBox');
+      const container = document.getElementById('searchMatchesContainer');
+      const q = query.toLowerCase().trim();
+      if (q.length < 2) {
+        box.classList.add('hidden');
+        return;
+      }
+      box.classList.remove('hidden');
+
+      const results = [];
+      document.querySelectorAll('pre').forEach(pre => {
+        if (pre.innerText.toLowerCase().includes(q)) {
+          const parentTab = pre.closest('.tab-content');
+          const tabName = parentTab ? parentTab.id : 'Cell';
+          results.push({ title: `Cell Match (${tabName})`, code: pre.innerText });
+        }
+      });
+
+      ERROR_DB.forEach(item => {
+        if (item.err.toLowerCase().includes(q) || item.cause.toLowerCase().includes(q) || item.fix.toLowerCase().includes(q)) {
+          results.push({ title: `Traceback Fix: ${item.err}`, code: `# ${item.cause}\n${item.fix}` });
+        }
+      });
+
+      if (results.length === 0) {
+        container.innerHTML = `<p>No matches found for "${query}".</p>`;
+        return;
+      }
+
+      container.innerHTML = results.slice(0, 8).map((r, i) => `
+        <div style="margin-bottom:10px;">
+          <div style="font-size:12px; font-weight:700; color:#303f9f; margin-bottom:3px;">${r.title}</div>
+          <div class="jp-input-area">
+            <button class="copy-btn" onclick="copyCode('sMatch_${i}', this)">Copy</button>
+            <pre id="sMatch_${i}" style="max-height:180px; overflow-y:auto;">${r.code.replace(/</g, '&lt;')}</pre>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function clearGlobalSearch() {
+      document.getElementById('globalSearch').value = '';
+      document.getElementById('searchResultsBox').classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.getElementById('globalSearch').focus();
+      }
+      if (e.key === 'Escape') clearGlobalSearch();
+      if (e.altKey && e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        copyCode('genOutput', null);
+      }
+      if (e.altKey && e.key.toLowerCase() === 'j') {
+        e.preventDefault();
+        downloadIPYNB();
+      }
+      if (e.altKey && e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const idx = parseInt(e.key, 10) - 1;
+        const btns = document.querySelectorAll('#tabBar .tab-btn');
+        if (btns[idx]) btns[idx].click();
+      }
+    });
+
+    loadState();
+    generateCode();
+    renderErrorDoctor();
+  </script>
+</body>
+</html>
